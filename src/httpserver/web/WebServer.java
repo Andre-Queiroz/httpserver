@@ -39,7 +39,7 @@ public class WebServer {
                     BufferedReader input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                     OutputStream output = new BufferedOutputStream(connection.getOutputStream());
                     PrintStream printStream = new PrintStream(output);
-                    httpResponse = new HttpResponse(printStream);
+                    httpResponse = new HttpResponse();
                     processor = new HttpRequestProcessor();
 
                     String request = input.readLine();
@@ -66,14 +66,12 @@ public class WebServer {
                             String queryParams = processor.getQueryParams(path);
 
                             if (isRequestMultiThread) {
-                                worker = new MultiThreadWorker();
+                                worker = new MultiThreadWorker(socket, connection);
                             } else {
-                                worker = new SingleThreadWorker();
+                                worker = new SingleThreadWorker(socket, connection);
                             }
 
                             worker.execute(queryParams);
-                            String html = worker.getResult();
-                            httpResponse.ok(html);
                         } else {
                             httpResponse.notFound();
                         }
