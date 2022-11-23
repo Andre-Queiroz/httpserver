@@ -1,3 +1,4 @@
+import httpserver.web.WebServer;
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 import calculatorhttp.CalculatorHttp;
@@ -13,5 +14,6 @@ public class Main {
             System.out.println(calc.executeOperation(input));
         }
         */
+        new WebServer(8080).execute();
     }
 }
