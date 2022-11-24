@@ -6,6 +6,7 @@ import httpserver.web.HttpResponse;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -18,36 +19,23 @@ public class SingleThreadWorker implements ThreadWorker {
 
     private ServerSocket tcpServerSocket;
     private Socket clientRequest;
+    private PrintStream responseStream;
 
-    public SingleThreadWorker(ServerSocket tcpServerSocket, Socket clientRequest) {
-        this.tcpServerSocket = tcpServerSocket;
-        this.clientRequest = clientRequest;
+    public SingleThreadWorker(PrintStream responseStream) {
+        this.responseStream = responseStream;
     }
     @Override
     public void execute(String queryParams) {
-        html = htmlBuilder.generateHtml(calculator.executeOperation(queryParams));
-
-
         System.out.println("Thread id: " + Thread.currentThread().getId());
 
-        DataOutputStream dos =  null;
-
-        try {
-            dos =  new DataOutputStream(clientRequest.getOutputStream());
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return;
-        }
-
         System.out.println("\nThreadId: " + Thread.currentThread().getId());
-        String format  = "\nServidorST: Request recebido de: %s:%s";
-        System.out.printf(format, clientRequest.getInetAddress().getHostName(), clientRequest.getPort());
         String html = htmlBuilder.generateHtml(calculator.executeOperation(queryParams));
 
         try {
-            dos.writeUTF(httpResponse.ok(html));
+            responseStream.print(httpResponse.ok(html));
+            responseStream.close();
             return;
-        } catch (IOException e) {
+        } catch (RuntimeException e) {
             e.printStackTrace();
         }
     }

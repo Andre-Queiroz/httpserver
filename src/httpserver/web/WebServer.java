@@ -66,9 +66,9 @@ public class WebServer {
                             String queryParams = processor.getQueryParams(path);
 
                             if (isRequestMultiThread) {
-                                worker = new MultiThreadWorker(socket, connection);
+                                worker = new MultiThreadWorker(printStream);
                             } else {
-                                worker = new SingleThreadWorker(socket, connection);
+                                worker = new SingleThreadWorker(printStream);
                             }
 
                             worker.execute(queryParams);
