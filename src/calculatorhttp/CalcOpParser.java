@@ -71,7 +71,7 @@ public class CalcOpParser {
                     }
                     break;
                 case ReadingV1:
-                    if(i < operation.length() - 1 && chars[i + 1] == '-') {
+                    if(i < operation.length() - 1 && chars[i + 1] == '&') {
                         parseState = ParserState.WaitingV2;
                         v1 = parseValue(buffer);
                         buffer = "";
