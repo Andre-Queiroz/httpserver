@@ -78,7 +78,7 @@ public class CalcOpParser {
                     }
                     break;
                 case WaitingV2:
-                    if(buffer.equals("-&v2=")) {
+                    if(buffer.equals("&v2=")) {
                         parseState = ParserState.ReadingV2;
                         buffer = "";
                     }
