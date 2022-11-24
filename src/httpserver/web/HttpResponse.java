@@ -1,6 +1,5 @@
 package httpserver.web;
 
-import java.io.PrintStream;
 import java.util.Date;
 
 public class HttpResponse {

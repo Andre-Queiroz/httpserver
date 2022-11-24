@@ -16,7 +16,6 @@ import java.net.Socket;
 public class WebServer {
 
     private int port = 8080;
-    private boolean isRequestMultiThread = false;
 
     public WebServer(int port) {
         this.port = port;
@@ -57,8 +56,9 @@ public class WebServer {
                     }
 
                     if (!processor.isRequestValid(request)) {
-                        httpResponse.badRequest();
+                        printStream.print(httpResponse.badRequest());
                     } else {
+                        boolean isRequestMultiThread;
                         String path = processor.getUrlPath(request);
 
                         if (processor.isPathValid(path)) {
@@ -70,14 +70,11 @@ public class WebServer {
                             } else {
                                 worker = new SingleThreadWorker(printStream);
                             }
-
                             worker.execute(queryParams);
                         } else {
-                            httpResponse.notFound();
+                            printStream.print(httpResponse.notFound());
                         }
                     }
-
-                    printStream.close();
                 } catch (Throwable throwable) {
                     System.err.println("Error receiving request: " + throwable);
                 }
