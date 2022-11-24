@@ -57,6 +57,7 @@ public class WebServer {
 
                     if (!processor.isRequestValid(request)) {
                         printStream.print(httpResponse.badRequest());
+                        printStream.close();
                     } else {
                         boolean isRequestMultiThread;
                         String path = processor.getUrlPath(request);
@@ -73,6 +74,7 @@ public class WebServer {
                             worker.execute(queryParams);
                         } else {
                             printStream.print(httpResponse.notFound());
+                            printStream.close();
                         }
                     }
                 } catch (Throwable throwable) {
