@@ -20,10 +20,10 @@ public class MultiThreadWorker implements ThreadWorker, Runnable {
     @Override
     public void run() {
         System.out.println("(MultiThread) Thread id: " + Thread.currentThread().getId());
-        String html = htmlBuilder.generateHtml(calculator.executeOperation(queryParams));
+        String html = htmlBuilder.generateSuccessHtml(calculator.executeOperation(queryParams));
 
         try {
-            printStream.print(httpResponse.ok(html));
+            printStream.print(httpResponse.success(html));
             printStream.close();
         } catch (RuntimeException e) {
             e.printStackTrace();

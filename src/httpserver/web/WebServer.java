@@ -1,5 +1,6 @@
 package httpserver.web;
 
+import htmlbuilder.HtmlBuilder;
 import httpserver.worker.MultiThreadWorker;
 import httpserver.worker.SingleThreadWorker;
 import httpserver.worker.ThreadWorker;
@@ -26,6 +27,7 @@ public class WebServer {
         HttpRequestProcessor processor;
         HttpResponse httpResponse;
         ThreadWorker worker;
+        HtmlBuilder htmlBuilder;
 
         try {
             socket = new ServerSocket(port);
@@ -40,6 +42,7 @@ public class WebServer {
                     PrintStream printStream = new PrintStream(output);
                     httpResponse = new HttpResponse();
                     processor = new HttpRequestProcessor();
+                    htmlBuilder = new HtmlBuilder();
 
                     String request = input.readLine();
 
@@ -56,7 +59,7 @@ public class WebServer {
                     }
 
                     if (!processor.isRequestValid(request)) {
-                        printStream.print(httpResponse.badRequest());
+                        printStream.print(httpResponse.badRequest(htmlBuilder.generateBadRequestHtml()));
                         printStream.close();
                     } else {
                         boolean isRequestMultiThread;
@@ -73,7 +76,7 @@ public class WebServer {
                             }
                             worker.execute(queryParams);
                         } else {
-                            printStream.print(httpResponse.notFound());
+                            printStream.print(httpResponse.notFound(htmlBuilder.generateBadRequestHtml()));
                             printStream.close();
                         }
                     }
