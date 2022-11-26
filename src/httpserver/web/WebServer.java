@@ -4,16 +4,13 @@ import httpserver.worker.MultiThreadWorker;
 import httpserver.worker.SingleThreadWorker;
 import httpserver.worker.ThreadWorker;
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 
 public class WebServer {
 
@@ -28,7 +25,7 @@ public class WebServer {
         HttpRequestProcessor processor;
         HttpResponse httpResponse;
         ThreadWorker worker;
-        List<String> fullRequest = new ArrayList<>();
+        String request;
 
         try {
             socket = new ServerSocket(port);
@@ -38,36 +35,21 @@ public class WebServer {
                 Socket connection = socket.accept();
 
                 try {
-                    BufferedReader input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    InputStream inputStream = connection.getInputStream();
                     OutputStream output = new BufferedOutputStream(connection.getOutputStream());
                     PrintStream printStream = new PrintStream(output);
+
                     httpResponse = new HttpResponse();
                     processor = new HttpRequestProcessor();
-                    fullRequest.clear();
 
-                    //String request = input.lines().toList();
+                    request = getRequest(inputStream);
 
-                    fullRequest.add(input.readLine());
-                    if (fullRequest.get(0) == null) {
-                        continue;
-                    }
-
-                    // ignoring
-                    while (input != null) {
-                        String line = input.readLine();
-                        if (line == null || line.length() == 0) {
-                            break;
-                        } else {
-                            fullRequest.add(line);
-                        }
-                    }
-
-                    if (!processor.isRequestValid(fullRequest)) {
+                    if (!processor.isRequestValid(request)) {
                         printStream.print(httpResponse.badRequest());
                         printStream.close();
                     } else {
                         boolean isRequestMultiThread;
-                        String path = processor.getUrlPath(fullRequest);
+                        String path = processor.getUrlPath(request);
 
                         if (processor.isPathValid(path)) {
                             isRequestMultiThread = processor.isMultiThread(path);
@@ -93,6 +75,15 @@ public class WebServer {
         } finally {
             close(socket);
         }
+    }
+
+    private String getRequest(InputStream inputStream) throws IOException {
+        StringBuilder builder = new StringBuilder();
+        do {
+            builder.append((char) inputStream.read());
+        } while (inputStream.available() > 0);
+
+        return builder.toString();
     }
 
     private void close(Closeable closeable) {
