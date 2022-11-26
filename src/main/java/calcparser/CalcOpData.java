@@ -29,8 +29,8 @@ public class CalcOpData {
 
     }
 
-    public CalcOpData(OperationType op, float v1, float v2) {
-        this.op = op.toString();
+    public CalcOpData(String op, float v1, float v2) {
+        this.op = op;
         this.v1 = v1;
         this.v2 = v2;
     }

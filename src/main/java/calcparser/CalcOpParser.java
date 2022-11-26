@@ -20,7 +20,7 @@ public class CalcOpParser {
         char currentChar;
         String buffer = new String();
 
-        OperationType opType = null;
+        String opType = null;
         float v1 = 0;
         float v2 = 0;
 
@@ -39,7 +39,7 @@ public class CalcOpParser {
                 case ReadingOp:
                     if(i < operation.length() - 1 && chars[i + 1] == '&') {
                         parseState = ParserState.WaitingV1;
-                        opType = CalcOpData.opTypeFromString(buffer);
+                        opType = buffer;
                         buffer = "";
                     }
                     break;
