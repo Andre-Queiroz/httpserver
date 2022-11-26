@@ -10,11 +10,11 @@ public class HttpResponse {
     private static final String HTTP_NOT_FOUND = "404 Not Found";
 
     private final String baseResponse =
-        "HTTP/1.0 " + "%s" + newLine +
-            "Content-Type: text/html" + newLine +
-            "Date: " + new Date() + newLine +
-            "Content-length: " + "%d" + newLine + newLine +
-            "%s";
+            "HTTP/1.0 " + "%s" + newLine +
+                    "Content-Type: text/html" + newLine +
+                    "Date: " + new Date() + newLine +
+                    "Content-length: " + "%d" + newLine + newLine +
+                    "%s";
 
     public String success(String response) {
         return String.format(baseResponse, HTTP_SUCCESS, response.length(), response);

@@ -3,7 +3,6 @@ package calcparser;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class CalcOpData {
     private static final String keySoma = "soma";
@@ -11,7 +10,7 @@ public class CalcOpData {
     private static final String keyMul = "multiplicacao";
     private static final String keyDiv = "divisao";
 
-    private static HashMap<String, OperationType> stringToOp = new HashMap<>(){{
+    private static final HashMap<String, OperationType> stringToOp = new HashMap<>() {{
         put(keySoma, OperationType.SUM);
         put(keySub, OperationType.SUB);
         put(keyMul, OperationType.MUL);
@@ -40,7 +39,7 @@ public class CalcOpData {
     }
 
     public static OperationType opTypeFromString(String opType) {
-        if(stringToOp.containsKey(opType)) return stringToOp.get(opType);
+        if (stringToOp.containsKey(opType)) return stringToOp.get(opType);
         else throw new RuntimeException("Operacao inexistente");
     }
 }

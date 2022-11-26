@@ -1,9 +1,9 @@
 package httpserver.worker;
 
+import calcparser.CalcOpData;
 import calculatorhttp.CalculatorHttp;
 import htmlbuilder.HtmlBuilder;
 import httpserver.web.HttpResponse;
-import calcparser.CalcOpData;
 
 import java.io.PrintStream;
 

@@ -5,12 +5,8 @@ import htmlbuilder.HtmlBuilder;
 import httpserver.worker.MultiThreadWorker;
 import httpserver.worker.SingleThreadWorker;
 import httpserver.worker.ThreadWorker;
-import java.io.BufferedOutputStream;
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
+
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
