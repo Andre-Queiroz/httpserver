@@ -1,5 +1,6 @@
 package httpserver.web;
 
+import calcparser.CalcOpData;
 import httpserver.worker.MultiThreadWorker;
 import httpserver.worker.SingleThreadWorker;
 import httpserver.worker.ThreadWorker;
@@ -53,14 +54,14 @@ public class WebServer {
 
                         if (processor.isPathValid(path)) {
                             isRequestMultiThread = processor.isMultiThread(path);
-                            String queryParams = processor.getQueryParams(path);
+                            CalcOpData opData = processor.getCalcParams(request);
 
                             if (isRequestMultiThread) {
                                 worker = new MultiThreadWorker(printStream);
                             } else {
                                 worker = new SingleThreadWorker(printStream);
                             }
-                            worker.execute(queryParams);
+                            worker.execute(opData);
                         } else {
                             printStream.print(httpResponse.notFound());
                             printStream.close();

@@ -1,4 +1,4 @@
-package calculatorhttp;
+package calcparser;
 
 import java.util.HashMap;
 

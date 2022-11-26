@@ -1,5 +1,6 @@
 package httpserver.worker;
 
+import calcparser.CalcOpData;
 import calculatorhttp.CalculatorHttp;
 import htmlbuilder.HtmlBuilder;
 import httpserver.web.HttpResponse;
@@ -17,9 +18,9 @@ public class SingleThreadWorker implements ThreadWorker {
     }
 
     @Override
-    public void execute(String queryParams) {
+    public void execute(CalcOpData opData) {
         System.out.println("(SingleThread) Thread id: " + Thread.currentThread().getId());
-        String html = htmlBuilder.generateHtml(calculator.executeOperation(queryParams));
+        String html = htmlBuilder.generateHtml(calculator.executeOperation(opData));
 
         try {
             printStream.print(httpResponse.ok(html));

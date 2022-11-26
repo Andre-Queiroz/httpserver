@@ -3,6 +3,8 @@ package httpserver.worker;
 import calculatorhttp.CalculatorHttp;
 import htmlbuilder.HtmlBuilder;
 import httpserver.web.HttpResponse;
+import calcparser.CalcOpData;
+
 import java.io.PrintStream;
 
 public class MultiThreadWorker implements ThreadWorker, Runnable {
@@ -11,7 +13,7 @@ public class MultiThreadWorker implements ThreadWorker, Runnable {
     private final HtmlBuilder htmlBuilder = new HtmlBuilder();
     private final HttpResponse httpResponse = new HttpResponse();
     private final PrintStream printStream;
-    private String queryParams;
+    private CalcOpData opData;
 
     public MultiThreadWorker(PrintStream printStream) {
         this.printStream = printStream;
@@ -20,7 +22,7 @@ public class MultiThreadWorker implements ThreadWorker, Runnable {
     @Override
     public void run() {
         System.out.println("(MultiThread) Thread id: " + Thread.currentThread().getId());
-        String html = htmlBuilder.generateHtml(calculator.executeOperation(queryParams));
+        String html = htmlBuilder.generateHtml(calculator.executeOperation(opData));
 
         try {
             printStream.print(httpResponse.ok(html));
@@ -31,8 +33,8 @@ public class MultiThreadWorker implements ThreadWorker, Runnable {
     }
 
     @Override
-    public void execute(String queryParams) {
-        this.queryParams = queryParams;
+    public void execute(CalcOpData opData) {
+        this.opData = opData;
         new Thread(this).start();
     }
 

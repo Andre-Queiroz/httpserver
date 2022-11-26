@@ -1,7 +1,9 @@
 package httpserver.worker;
 
+import calcparser.CalcOpData;
+
 public interface ThreadWorker {
 
-    void execute(String queryParams);
+    void execute(CalcOpData opData);
 
 }

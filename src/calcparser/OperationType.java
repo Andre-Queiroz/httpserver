@@ -1,4 +1,4 @@
-package calculatorhttp;
+package calcparser;
 
 public enum OperationType {
     SUM,
