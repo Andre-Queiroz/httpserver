@@ -12,6 +12,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 
 public class WebServer {
@@ -27,7 +28,7 @@ public class WebServer {
         HttpRequestProcessor processor;
         HttpResponse httpResponse;
         ThreadWorker worker;
-        List<String> fullRequest;
+        List<String> fullRequest = new ArrayList<>();
 
         try {
             socket = new ServerSocket(port);
@@ -42,19 +43,22 @@ public class WebServer {
                     PrintStream printStream = new PrintStream(output);
                     httpResponse = new HttpResponse();
                     processor = new HttpRequestProcessor();
+                    fullRequest.clear();
 
-                    fullRequest = input.lines().toList();
                     //String request = input.lines().toList();
 
+                    fullRequest.add(input.readLine());
                     if (fullRequest.get(0) == null) {
                         continue;
                     }
 
                     // ignoring
-                    while (true) {
-                        String ignore = input.readLine();
-                        if (ignore == null || ignore.length() == 0) {
+                    while (input != null) {
+                        String line = input.readLine();
+                        if (line == null || line.length() == 0) {
                             break;
+                        } else {
+                            fullRequest.add(line);
                         }
                     }
 
