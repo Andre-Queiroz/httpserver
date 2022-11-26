@@ -5,24 +5,27 @@ import java.util.Date;
 public class HttpResponse {
 
     private static final String newLine = "\r\n";
+    private static final String HTTP_SUCCESS = "200 OK";
+    private static final String HTTP_BAD_REQUEST = "400 Bad Request";
+    private static final String HTTP_NOT_FOUND = "404 Not Found";
 
-    public String ok(String response) {
-        Date date = new Date();
+    private final String baseResponse =
+        "HTTP/1.0 " + "%s" + newLine +
+            "Content-Type: text/html" + newLine +
+            "Date: " + new Date() + newLine +
+            "Content-length: " + "%d" + newLine + newLine +
+            "%s";
 
-        return
-            "HTTP/1.0 200 OK" + newLine +
-                "Content-Type: text/html" + newLine +
-                "Date: " + date + newLine +
-                "Content-length: " + response.length() + newLine + newLine +
-                response;
+    public String success(String response) {
+        return String.format(baseResponse, HTTP_SUCCESS, response.length(), response);
     }
 
-    public String badRequest() {
-        return "HTTP/1.0 400 Bad Request" + newLine + newLine;
+    public String badRequest(String response) {
+        return String.format(baseResponse, HTTP_BAD_REQUEST, response.length(), response);
     }
 
-    public String notFound() {
-        return "HTTP/1.0 404 Not Found" + newLine + newLine;
+    public String notFound(String response) {
+        return String.format(baseResponse, HTTP_NOT_FOUND, response.length(), response);
     }
 
 }

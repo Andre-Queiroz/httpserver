@@ -20,10 +20,9 @@ public class SingleThreadWorker implements ThreadWorker {
     @Override
     public void execute(CalcOpData opData) {
         System.out.println("(SingleThread) Thread id: " + Thread.currentThread().getId());
-        String html = htmlBuilder.generateHtml(calculator.executeOperation(opData));
-
+        String html = htmlBuilder.generateSuccessHtml(calculator.executeOperation(opData));
         try {
-            printStream.print(httpResponse.ok(html));
+            printStream.print(httpResponse.success(html));
             printStream.close();
         } catch (RuntimeException e) {
             e.printStackTrace();

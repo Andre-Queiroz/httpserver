@@ -1,6 +1,7 @@
 package httpserver.web;
 
 import calcparser.CalcOpData;
+import htmlbuilder.HtmlBuilder;
 import httpserver.worker.MultiThreadWorker;
 import httpserver.worker.SingleThreadWorker;
 import httpserver.worker.ThreadWorker;
@@ -27,6 +28,7 @@ public class WebServer {
         HttpResponse httpResponse;
         ThreadWorker worker;
         String request;
+        HtmlBuilder htmlBuilder;
 
         try {
             socket = new ServerSocket(port);
@@ -42,11 +44,12 @@ public class WebServer {
 
                     httpResponse = new HttpResponse();
                     processor = new HttpRequestProcessor();
+                    htmlBuilder = new HtmlBuilder();
 
                     request = getRequest(inputStream);
 
                     if (!processor.isRequestValid(request)) {
-                        printStream.print(httpResponse.badRequest());
+                        printStream.print(httpResponse.badRequest(htmlBuilder.generateBadRequestHtml()));
                         printStream.close();
                     } else {
                         boolean isRequestMultiThread;
@@ -63,7 +66,7 @@ public class WebServer {
                             }
                             worker.execute(opData);
                         } else {
-                            printStream.print(httpResponse.notFound());
+                            printStream.print(httpResponse.notFound(htmlBuilder.generateBadRequestHtml()));
                             printStream.close();
                         }
                     }
