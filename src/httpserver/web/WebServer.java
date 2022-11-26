@@ -12,6 +12,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 
 public class WebServer {
 
@@ -26,6 +27,7 @@ public class WebServer {
         HttpRequestProcessor processor;
         HttpResponse httpResponse;
         ThreadWorker worker;
+        List<String> fullRequest;
 
         try {
             socket = new ServerSocket(port);
@@ -41,9 +43,10 @@ public class WebServer {
                     httpResponse = new HttpResponse();
                     processor = new HttpRequestProcessor();
 
-                    String request = input.readLine();
+                    fullRequest = input.lines().toList();
+                    //String request = input.lines().toList();
 
-                    if (request == null) {
+                    if (fullRequest.get(0) == null) {
                         continue;
                     }
 
@@ -55,12 +58,12 @@ public class WebServer {
                         }
                     }
 
-                    if (!processor.isRequestValid(request)) {
+                    if (!processor.isRequestValid(fullRequest)) {
                         printStream.print(httpResponse.badRequest());
                         printStream.close();
                     } else {
                         boolean isRequestMultiThread;
-                        String path = processor.getUrlPath(request);
+                        String path = processor.getUrlPath(fullRequest);
 
                         if (processor.isPathValid(path)) {
                             isRequestMultiThread = processor.isMultiThread(path);
