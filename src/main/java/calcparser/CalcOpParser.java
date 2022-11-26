@@ -1,7 +1,5 @@
 package calcparser;
 
-import java.util.HashMap;
-
 public class CalcOpParser {
     private enum ParserState {
         WaitingOp,
@@ -12,27 +10,8 @@ public class CalcOpParser {
         ReadingV2,
     }
 
-    private final String keySoma = "soma";
-    private final String keySub = "subtracao";
-    private final String keyMul = "multiplicacao";
-    private final String keyDiv = "divisao";
-    private HashMap<String, OperationType> stringToOp;
-
     private float parseValue(String value) throws NumberFormatException {
         return Float.parseFloat(value);
-    }
-
-    private OperationType parseOp(String operation) throws RuntimeException {
-        if(stringToOp.containsKey(operation)) return stringToOp.get(operation);
-        else throw new RuntimeException("Operacao inexistente");
-    }
-
-    public CalcOpParser() {
-        stringToOp = new HashMap<>();
-        stringToOp.put(keySoma, OperationType.SUM);
-        stringToOp.put(keySub, OperationType.SUB);
-        stringToOp.put(keyMul, OperationType.MUL);
-        stringToOp.put(keyDiv, OperationType.DIV);
     }
 
     public CalcOpData parseOperationStr(String operation) throws RuntimeException {
@@ -60,7 +39,7 @@ public class CalcOpParser {
                 case ReadingOp:
                     if(i < operation.length() - 1 && chars[i + 1] == '&') {
                         parseState = ParserState.WaitingV1;
-                        opType = parseOp(buffer);
+                        opType = CalcOpData.opTypeFromString(buffer);
                         buffer = "";
                     }
                     break;

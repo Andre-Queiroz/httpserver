@@ -4,7 +4,7 @@ import calcparser.CalcOpData;
 
 public class CalculatorHttp {
     public float executeOperation(CalcOpData opData) {
-        switch (opData.op) {
+        switch (opData.getOpType()) {
             case SUM:
                 return opData.v1 + opData.v2;
             case SUB:

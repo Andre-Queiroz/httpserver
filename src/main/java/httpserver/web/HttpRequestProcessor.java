@@ -2,6 +2,7 @@ package httpserver.web;
 
 import calcparser.CalcOpData;
 import calcparser.CalcOpParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
@@ -52,22 +53,38 @@ public class HttpRequestProcessor {
     public CalcOpData getCalcParams(String request)
     {
         String[] lines = request.split(System.getProperty("line.separator"));
-        String queryParams;
+        String buffer;
+        CalcOpData result = new CalcOpData();
 
         if(lines[0].startsWith("GET ")) {
-            queryParams = lines[0].replaceAll("GET ", "")
+            buffer = lines[0].replaceAll("GET ", "")
                     .replaceAll("POST ", "")
                     .replaceAll(" HTTP/1.0", "")
                     .replaceAll(" HTTP/1.1", "")
                     .replaceAll("/favicon.ico", "");
 
-            return parser.parseOperationStr(queryParams.substring(queryParams.lastIndexOf("?") + 1));
+            result = parser.parseOperationStr(buffer.substring(buffer.lastIndexOf("?") + 1));
         } else if (lines[0].startsWith("POST ")){
+            buffer = "";
+            int index = 1;
+            for (; index < lines.length - 1; index++) {
+                if(lines[index - 1].isBlank() && lines[index].contains("{")) break;
+            }
+            for (; index < lines.length; index++) {
+                buffer += lines[index];
+            }
 
+            ObjectMapper mapper = new ObjectMapper();
+
+            try{
+                result = mapper.readValue(buffer, CalcOpData.class);
+            } catch (JsonProcessingException pe) {
+                throw new RuntimeException("Bad json!" + pe.toString());
+            }
         } else {
             throw new RuntimeException("Bad request!");
         }
-        return new CalcOpData();
+        return result;
     }
 
 }
